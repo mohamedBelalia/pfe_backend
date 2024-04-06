@@ -34,6 +34,10 @@ if(isset($paramitersArray[1])){
 }
 
 
+
+// var_dump($paramiterKeyValue);
+
+
 switch ($endpoint) {
     case "workers":
         $worker = new WorkerController();

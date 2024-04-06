@@ -36,6 +36,7 @@ class Format{
             $paramiterKeyValue = [$passedParamiters[0] , $passedParamiterValue ];
 
             return $paramiterKeyValue ;
+            // return $passedParamiters;
     }
 
 }
