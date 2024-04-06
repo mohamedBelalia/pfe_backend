@@ -1,0 +1,23 @@
+AuthType Basic
+AuthName "Restricted Access"
+AuthUserFile C:\wamp64\www\api\.htpasswd
+Require valid-user
+
+ 
+
+
+
+ SELECT O.idOuvrier,O.nomOuvrier, O.prenomOuvrier, O.phone, O.imgProfile , O.ville , 
+	B.* ,
+    COUNT(CO.idCommentaire) AS nbrCommentair,                              
+    CAST(AVG(CO.nbrEtoile) AS DECIMAL(10,1)) AS avgEtoile
+    FROM ouvriers_maitrisent_professions OMF
+    INNER JOIN ouvriers O ON O.idOuvrier = OMF.idOuvrier
+    INNER JOIN professions P ON P.idProfession = OMF.idProfession
+    LEFT JOIN badges B ON B.idBadge = O.badgeId 
+    LEFT JOIN commentaires_ouvriers CO ON CO.idOuvrier = O.idOuvrier
+    WHERE 
+    	(P.labelleProfession_FR = "Charpentier" OR P.labelleProfession_AR = "Charpentier")
+        AND O.ville = "Marrakech"
+        AND O.badgeId = "1"
+    GROUP BY O.idOuvrier, O.nomOuvrier, O.prenomOuvrier, O.phone, O.imgProfile; 
