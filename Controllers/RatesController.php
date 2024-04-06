@@ -15,8 +15,8 @@ class RatesController{
     }
 
     public function get($paramiterKeyValue){
-        if($paramiterKeyValue[0] == "workerId" &&  isset($paramiterKeyValue[1])){
-            $result = $this->rateModel->getByIdWorker($paramiterKeyValue[1]) ;
+        if(isset($paramiterKeyValue["workerId"])){
+            $result = $this->rateModel->getByIdWorker($paramiterKeyValue["workerId"]) ;
 
             if($result != null){
                 echo json_encode($result);
@@ -31,7 +31,6 @@ class RatesController{
         else{
             echo '{"status" : "wrong URI Format"}';   
         }
-
     }
 
 }

@@ -23,22 +23,41 @@ class Format{
 
     public static function formatPassedParamiters($paramiters){
 
-            $passedParamiters = explode("=" , $paramiters);
+            $ParentParams = explode("&" , $paramiters);
 
-            if($passedParamiters[0] == "id" || $passedParamiters[0] == "top" || $passedParamiters[0] == "workerId"  ){
-                $passedParamiterValue = $passedParamiters[1]; 
-            }
-        
-            if($passedParamiters[0] == "filter"){
-                $passedParamiterValue = self::formatFilterParamiters($passedParamiters[1]);
-            }
-        
-            $paramiterKeyValue = [$passedParamiters[0] , $passedParamiterValue ];
+            $ParamsKeyValueTab = array();
 
-            return $paramiterKeyValue ;
-            // return $passedParamiters;
+            foreach($ParentParams as $param){
+                $childParams =  self::explodeByEquals($param);
+                if($childParams != null){
+                    $ParamsKeyValueTab[$childParams[0]] = $childParams[1] ;
+                }
+            }
+
+            return $ParamsKeyValueTab ;
+    }
+
+
+    public static function explodeByEquals($keyValue){
+        $passedParamiters = explode("=" , $keyValue);
+
+        if($passedParamiters[0] == "id" || $passedParamiters[0] == "top" || $passedParamiters[0] == "workerId" || $passedParamiters[0] == "images"  ){
+            $passedParamiterValue = $passedParamiters[1]; 
+        }
+        else if($passedParamiters[0] == "filter"){
+            $passedParamiterValue = self::formatFilterParamiters($passedParamiters[1]);
+        }
+        else{
+            return null ;
+        }
+
+    
+        $paramiterKeyValue = [$passedParamiters[0] , $passedParamiterValue ];
+
+        return $paramiterKeyValue ;
     }
 
 }
 
 ?>
+

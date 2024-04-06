@@ -43,7 +43,25 @@ class ProjectsModel{
         return null ;
     }
 
-   
+
+    public function getProjectImages($idProject , $imgParam){
+        if($this->dbConnection != null){
+            if($imgParam == "all"){
+                $query = "SELECT imgPath FROM project_images WHERE idProject = '$idProject';" ;
+
+                $result = $this->dbConnection->query($query);
+
+                if($result->num_rows > 0){
+                    return $result->fetch_all(MYSQLI_ASSOC);
+                }
+
+                return 0 ;
+            }
+        }
+
+        return null ;
+    }
+
 }
 
 ?>

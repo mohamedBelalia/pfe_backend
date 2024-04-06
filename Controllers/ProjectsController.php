@@ -16,8 +16,8 @@ class ProjectsController{
 
     public function get($paramiterKeyValue){
 
-        if($paramiterKeyValue[0] == "workerId" && isset($paramiterKeyValue[1])){
-            $result = $this->projectModel->getByWorkerId($paramiterKeyValue[1]);
+        if(isset($paramiterKeyValue["workerId"])){
+            $result = $this->projectModel->getByWorkerId($paramiterKeyValue["workerId"]);
 
             if($result != null){
                 echo json_encode($result);
@@ -29,9 +29,22 @@ class ProjectsController{
                 echo '{"status" : "connection error"}';
             }
         }
-        else if($paramiterKeyValue[0] == "id" && isset($paramiterKeyValue[1])){
-            $result = $this->projectModel->getById($paramiterKeyValue[1]);
+        else if(isset($paramiterKeyValue["id"]) && isset($paramiterKeyValue["images"])){
+            $result = $this->projectModel->getProjectImages($paramiterKeyValue["id"] , $paramiterKeyValue["images"] );
+            if($result != null){
+                echo json_encode($result);
+            }
+            else if($result == 0){
+                echo '{"status" : "not_found"}';
+            }
+            else{
+                echo '{"status" : "connection error"}';
+            }
 
+        }
+        else if(isset($paramiterKeyValue["id"])){
+            $result = $this->projectModel->getById($paramiterKeyValue["id"]);
+                
             if($result != null){
                 echo json_encode($result);
             }
@@ -41,9 +54,7 @@ class ProjectsController{
             else{
                 echo '{"status" : "connection error"}';
             }
-        }
-        else if($paramiterKeyValue[0] == "images" && isset($paramiterKeyValue[1])){
-            echo json_encode($paramiterKeyValue);
+
         }
         else{
             echo '{"status" : "wrong URI Format"}';   

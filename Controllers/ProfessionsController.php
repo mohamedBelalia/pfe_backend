@@ -15,7 +15,8 @@ class ProfessionsController{
     }
 
     public function get($paramiterKeyValue){
-        if($paramiterKeyValue == null){
+
+        if(empty($paramiterKeyValue)){
             $result = $this->professionsModel->getAll();
 
             if($result != null){
@@ -25,9 +26,9 @@ class ProfessionsController{
                 echo '{"status" : "connection error"}';
             }
         }
-        else if($paramiterKeyValue[0] == "id" && isset($paramiterKeyValue[1])){
+        else if(isset($paramiterKeyValue["id"])){
             
-            $result = $this->professionsModel->getById($paramiterKeyValue[1]);
+            $result = $this->professionsModel->getById($paramiterKeyValue["id"]);
 
                 if($result != null){
                     echo json_encode($result);
@@ -39,8 +40,8 @@ class ProfessionsController{
                     echo '{"status" : "connection error"}';
                 }
         }
-        else if($paramiterKeyValue[0] == "workerId" &&  isset($paramiterKeyValue[1])){
-            $result = $this->professionsModel->getByWorkerId($paramiterKeyValue[1]);
+        else if($paramiterKeyValue["workerId"]){
+            $result = $this->professionsModel->getByWorkerId($paramiterKeyValue["workerId"]);
 
             if($result != null){
                 echo json_encode($result);
@@ -52,6 +53,7 @@ class ProfessionsController{
                 echo '{"status" : "connection error"}';
             }
         }
+
     }
 
 }

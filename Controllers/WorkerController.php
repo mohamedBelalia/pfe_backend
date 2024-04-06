@@ -16,9 +16,9 @@ class WorkerController{
 
     public function get($paramiterKeyValue){
         if($paramiterKeyValue != null){
-            if($paramiterKeyValue[0] == "id" && isset($paramiterKeyValue[1])){
+            if(isset($paramiterKeyValue["id"])){
 
-                $result = $this->userModel->getById($paramiterKeyValue[1]);
+                $result = $this->userModel->getById($paramiterKeyValue["id"]);
 
                 if($result != null){
                     echo json_encode($result);
@@ -30,8 +30,8 @@ class WorkerController{
                     echo '{"status" : "connection error"}';
                 }
             }
-            else if($paramiterKeyValue[0] == "filter" && $paramiterKeyValue[1] != null){
-                $result = $this->userModel->getByFilter($paramiterKeyValue[1]);
+            else if(isset($paramiterKeyValue["filter"]) && $paramiterKeyValue["filter"] != null){
+                $result = $this->userModel->getByFilter($paramiterKeyValue["filter"]);
 
                 if($result != null){
                     echo json_encode($result);
@@ -40,10 +40,10 @@ class WorkerController{
                     echo '{"status" : "connection error"}';
                 }
             } 
-            else if($paramiterKeyValue[0] == "top" && isset($paramiterKeyValue[1])){
+            else if(isset($paramiterKeyValue["top"])){
 
-                if((int)$paramiterKeyValue[1]){
-                    $result = $this->userModel->getTop($paramiterKeyValue[1]);
+                if((int)$paramiterKeyValue["top"]){
+                    $result = $this->userModel->getTop($paramiterKeyValue["top"]);
 
                     if($result == null){
                         echo '{"status" : "connection_error"}';
@@ -103,9 +103,9 @@ class WorkerController{
     }
 
     public function delete($paramiterKeyValue){
-        if($paramiterKeyValue[0] == "id" && $paramiterKeyValue[1] != null){
+        if(isset($paramiterKeyValue["id"])){
             
-            $deleteState = $this->userModel->deleteUser($paramiterKeyValue[1]);
+            $deleteState = $this->userModel->deleteUser($paramiterKeyValue["id"]);
 
             if($deleteState == null){
                 echo '{"status" : "connection error"}';
@@ -120,12 +120,12 @@ class WorkerController{
     }
 
     public function put($paramiterKeyValue){
-        if($paramiterKeyValue[0] == "id" && $paramiterKeyValue[1] != null){
+        if(isset($paramiterKeyValue["id"])){
             $newPassedData = file_get_contents("php://input");
             $data = json_decode($newPassedData, true);
 
             if(is_array($data)){
-                $updateState = $this->userModel->updateUserInfo($paramiterKeyValue[1] , $data);
+                $updateState = $this->userModel->updateUserInfo($paramiterKeyValue["id"] , $data);
 
                 if($updateState == null ){
                     echo '{"status" : "connection error"}';

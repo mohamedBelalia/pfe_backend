@@ -16,6 +16,9 @@ class DiplomesController{
 
     public function get($paramiterKeyValue){
 
+        // var_dump($paramiterKeyValue);
+
+    
         if($paramiterKeyValue == null){
             $result = $this->diplomModel->getAll();
 
@@ -26,8 +29,8 @@ class DiplomesController{
                 echo '{"status" : "connection error"}';
             }
         }
-        else if($paramiterKeyValue[0] == "workerId" &&  isset($paramiterKeyValue[1])){
-            $result = $this->diplomModel->getByWorkerId($paramiterKeyValue[1]);
+        else if(isset($paramiterKeyValue["workerId"])){
+            $result = $this->diplomModel->getByWorkerId($paramiterKeyValue["workerId"]);
 
             if($result != null){
                 echo json_encode($result);
@@ -42,7 +45,8 @@ class DiplomesController{
         else{
             echo '{"status" : "wrong URI Format"}';   
         }
-
+    
+    
     }
 
 }
