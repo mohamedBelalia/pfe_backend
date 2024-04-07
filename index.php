@@ -10,6 +10,7 @@ require "Controllers/ProfessionsController.php";
 require "Controllers/DiplomesController.php";
 require "Controllers/ProjectsController.php";
 require "Controllers/RatesController.php";
+require "Controllers/CommentairesController.php";
 
 
 $passedParamiterValue = null ;
@@ -54,6 +55,10 @@ switch ($endpoint) {
     case "comments":
         $comment = new RatesController();
         $comment->request($method , $paramiterKeyValue);
+        break ;
+    case "commentaire" :
+        $commentaire = new CommentairesController();
+        $commentaire->request($method , $paramiterKeyValue);
         break ;
 
     default:
