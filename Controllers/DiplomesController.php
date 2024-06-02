@@ -27,6 +27,7 @@ class DiplomesController{
             }
             else{
                 echo '{"status" : "connection error"}';
+                
             }
         }
         else if(isset($paramiterKeyValue["workerId"])){
@@ -37,9 +38,11 @@ class DiplomesController{
             }
             else if($result == 0){
                 echo '{"status" : "not found"}';
+                // header("HTTP/1.1 404");
             }
             else{
                 echo '{"status" : "connection error"}';
+                header("HTTP/1.1 500");
             }
         }
         else{

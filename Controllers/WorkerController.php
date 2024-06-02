@@ -25,9 +25,11 @@ class WorkerController{
                 }
                 else if($result == 0){
                     echo '{"status" : "not_found"}';
+                    // header("HTTP/1.1 404");
                 }
                 else{
                     echo '{"status" : "connection error"}';
+                    header("HTTP/1.1 500");
                 }
             }
             else if(isset($paramiterKeyValue["filter"]) && $paramiterKeyValue["filter"] != null){
@@ -38,6 +40,7 @@ class WorkerController{
                 }
                 else{
                     echo '{"status" : "connection error"}';
+                    header("HTTP/1.1 500");
                 }
             } 
             else if(isset($paramiterKeyValue["top"])){
@@ -50,6 +53,7 @@ class WorkerController{
                     }
                     else if($result == 0){
                         echo '{"status" : "not_found"}';
+                        // header("HTTP/1.1 404");
                     } 
                     else{
                         echo json_encode($result);
@@ -68,6 +72,7 @@ class WorkerController{
             }
             else{
                 echo '{"status" : "connection error"}';
+                header("HTTP/1.1 500");
             }
         }
     }
@@ -109,6 +114,7 @@ class WorkerController{
 
             if($deleteState == null){
                 echo '{"status" : "connection error"}';
+                header("HTTP/1.1 500");
             }
             else{
                 echo '{"status" : "deleted successfully"}';
@@ -129,12 +135,14 @@ class WorkerController{
 
                 if($updateState == null ){
                     echo '{"status" : "connection error"}';
+                    header("HTTP/1.1 500");
                 }
                 else if($updateState){
                     echo '{"status" : "updated successfully"}';
                 }
                 else{
                     echo '{"status" : "not found"}';
+                    // header("HTTP/1.1 404");
                 }
             }
             else {

@@ -24,9 +24,11 @@ class ProjectsController{
             }
             else if($result == 0){
                 echo '{"status" : "not found"}';
+                // header("HTTP/1.1 404");
             }
             else{
                 echo '{"status" : "connection error"}';
+                header("HTTP/1.1 500");
             }
         }
         else if(isset($paramiterKeyValue["id"]) && isset($paramiterKeyValue["images"])){
@@ -36,9 +38,11 @@ class ProjectsController{
             }
             else if($result == 0){
                 echo '{"status" : "not_found"}';
+                // header("HTTP/1.1 404");
             }
             else{
                 echo '{"status" : "connection error"}';
+                header("HTTP/1.1 500");
             }
 
         }
@@ -50,9 +54,11 @@ class ProjectsController{
             }
             else if($result == 0){
                 echo '{"status" : "not found"}';
+                // header("HTTP/1.1 404");
             }
             else{
                 echo '{"status" : "connection error"}';
+                header("HTTP/1.1 500");
             }
 
         }

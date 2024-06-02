@@ -24,6 +24,7 @@ class CommentairesController {
         }
         else if($insertionResult === null){
             echo json_encode(["status" => "connection_error"]);
+            header("HTTP/1.1 500");
         }
         else if($insertionResult == "uncompleted_data"){
             echo json_encode(["status" => "uncompleted_data"]);

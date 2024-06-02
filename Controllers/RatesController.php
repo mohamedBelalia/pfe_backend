@@ -23,9 +23,11 @@ class RatesController{
             }
             else if($result == 0){
                 echo '{"status" : "no_comments"}';
+                // header("HTTP/1.1 404");
             }
             else{
                 echo '{"status" : "connection error"}';
+                header("HTTP/1.1 500");
             }
         }
         else{
