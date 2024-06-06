@@ -1,6 +1,7 @@
 <?php 
 
 require "Models/ProjectsModel.php";
+require "./config/CompressImg.php";
 
 class ProjectsController{
 
@@ -67,6 +68,45 @@ class ProjectsController{
         }
 
     }
+
+   
+    public function post($unUsedValue){
+     
+        $title = isset($_POST['title']) ? $_POST['title'] : '';
+        $description = isset($_POST['description']) ? $_POST['description'] : '';
+        $images = array();
+    
+        if (isset($_FILES['images'])) {
+            $fileCount = count($_FILES['images']['name']);
+            for ($i = 0; $i < $fileCount; $i++) {
+             
+                $uniqueFilename = uniqid() . '_' . $_FILES["images"]["name"][$i];
+                
+                $target_dir = "uploads/Projects/";
+                $target_file = $target_dir . basename($uniqueFilename);
+    
+                if (move_uploaded_file($_FILES["images"]["tmp_name"][$i], $target_file)) {
+                    $imgPath = CompressImg::convertToWebP($target_file);
+                    array_push($images , $imgPath);
+                } else {
+                    echo "Sorry, there was an error uploading your file.<br>";
+                }
+            }
+        } else {
+            echo "No images uploaded.";
+        }
+
+        if($this->projectModel->addProject("3" , $title , $description , $images)){
+            echo '{"status" : "done"}';
+        }
+        else{
+            echo '{"status" : "something_wrong"}';
+        }
+    }
+    
+    
+    
+    
 
     public function delete($paramiterKeyValue){
         
