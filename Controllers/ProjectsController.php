@@ -104,9 +104,6 @@ class ProjectsController{
         }
     }
     
-    
-    
-    
 
     public function delete($paramiterKeyValue){
         
