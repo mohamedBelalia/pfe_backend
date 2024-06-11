@@ -8,6 +8,31 @@ class CommentairesModel{
         $this->dbConnection = DbConnection::dbCon() ;
     }
 
+    // get the comments rating 
+    public function getCommentRating($workerId , $commentType){
+        if($this->dbConnection != null){
+            $query = "SELECT
+                            SUM(CASE WHEN $commentType = 'Bien' THEN 1 ELSE 0 END) AS count_Bien,
+                            SUM(CASE WHEN $commentType = 'Tres Bien' THEN 1 ELSE 0 END) AS count_Tres_Bien,
+                            SUM(CASE WHEN $commentType = 'Excellent' THEN 1 ELSE 0 END) AS count_Excellent
+                            FROM commentaires WHERE idOuvrier = '$workerId';" ;
+
+            $result = $this->dbConnection->query($query);
+
+            $returnedResult = $result->fetch_all(MYSQLI_ASSOC);
+
+            if($result->num_rows > 0){
+                return $returnedResult ;
+            }
+
+            return ["status" => "not found"];
+        }
+
+        return ["status" => "connection_error"];
+            
+       
+    }
+
     public function insertCommentaire(array $commentaireData){
 
         $acceptedCommentValues = ["Excellent" , "Tres Bien" , "Bien"] ;

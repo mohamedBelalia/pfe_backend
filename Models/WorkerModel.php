@@ -10,11 +10,12 @@ class WorkerModel{
     public function getById($id) : array | null | int {
         if($this->dbCon != null){
 
-            $query = "SELECT O.idOuvrier , O.nomOuvrier , O.prenomOuvrier , O.phone , O.imgProfile , O.description_ouvrier , 
+            $query = "SELECT O.idOuvrier , O.nomOuvrier , O.prenomOuvrier , O.phone , O.imgProfile , O.description_ouvrier , V.ville_AR , V.ville_FR ,
                         B.* , COUNT(C.idOuvrier) AS nbrCommentair , CAST(AVG(C.nbrEtoile) AS DECIMAL(10,1)) AS avgEtoile
                         FROM ouvriers O
                         LEFT JOIN badges B ON B.idBadge = O.badgeId
                         LEFT JOIN commentaires_ouvriers C ON C.idOuvrier = O.idOuvrier
+                        LEFT JOIN villes V ON V.idVille = O.ville
                         WHERE O.idOuvrier = '$id';";
             $result = $this->dbCon->query($query);
 
@@ -43,8 +44,8 @@ class WorkerModel{
                 }
 
                 if($key == "badge" && strlen($value) > 0){
-                    if(str_contains($value , "&")){
-                        $badgesList = explode("&" , $value) ;
+                    if(str_contains($value , "|")){
+                        $badgesList = explode("|" , $value) ;
                         $badge1 = $badgesList[0];
                         $badge2 = $badgesList[1];
                         $condtionPart .= " O.badgeId in ('$badge1' , '$badge2') AND " ;
@@ -79,7 +80,7 @@ class WorkerModel{
                     return $returnedResult;
                 }
 
-               return ["status" => "not found"];
+             return ["status" => "not found"];
             }
 
             

@@ -13,6 +13,14 @@ class CommentairesController {
         $this->$method($paramiterKeyValue);
     }
 
+    public function get($passedParamiter){
+        if(isset($passedParamiter["rateOf"]) && isset($passedParamiter["workerId"]) ){
+            $result = $this->commentaireModel->getCommentRating($passedParamiter["workerId"] , $passedParamiter["rateOf"]);
+
+            echo json_encode($result);
+        }
+    }
+
     public function post(){
         $passedData = file_get_contents("php://input");
         $data = json_decode($passedData, true);

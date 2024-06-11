@@ -41,7 +41,8 @@ class Format{
     public static function explodeByEquals($keyValue){
         $passedParamiters = explode("=" , $keyValue);
 
-        if($passedParamiters[0] == "id" || $passedParamiters[0] == "top" || $passedParamiters[0] == "workerId" || $passedParamiters[0] == "images"  ){
+        if($passedParamiters[0] == "id" || $passedParamiters[0] == "top" || $passedParamiters[0] == "workerId" || 
+            $passedParamiters[0] == "images" || $passedParamiters[0] == "rateOf"){
             $passedParamiterValue = $passedParamiters[1]; 
         }
         else if($passedParamiters[0] == "filter"){
