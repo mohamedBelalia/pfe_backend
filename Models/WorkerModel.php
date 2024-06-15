@@ -11,10 +11,9 @@ class WorkerModel{
         if($this->dbCon != null){
 
             $query = "SELECT O.idOuvrier , O.nomOuvrier , O.prenomOuvrier , O.phone , O.imgProfile , O.description_ouvrier , V.ville_AR , V.ville_FR ,
-                        B.* , COUNT(C.idOuvrier) AS nbrCommentair , CAST(AVG(C.nbrEtoile) AS DECIMAL(10,1)) AS avgEtoile
+                        B.*
                         FROM ouvriers O
                         LEFT JOIN badges B ON B.idBadge = O.badgeId
-                        LEFT JOIN commentaires_ouvriers C ON C.idOuvrier = O.idOuvrier
                         LEFT JOIN villes V ON V.idVille = O.ville
                         WHERE O.idOuvrier = '$id';";
             $result = $this->dbCon->query($query);
@@ -62,15 +61,15 @@ class WorkerModel{
                 $query = "
                     SELECT O.idOuvrier,O.nomOuvrier, O.prenomOuvrier, O.phone, O.imgProfile , O.ville , 
                     B.* ,
-                    COUNT(CO.idCommentaire) AS nbrCommentair,                              
-                    CAST(AVG(CO.nbrEtoile) AS DECIMAL(10,1)) AS avgEtoile
+                    COUNT(CO.commentaire_id) AS nbrCommentair,                              
+                    CAST(AVG(CO.moyenneEtoiles) AS DECIMAL(10,1)) AS avgEtoile
                     FROM ouvriers_maitrisent_professions OMF
                     INNER JOIN ouvriers O ON O.idOuvrier = OMF.idOuvrier
                     INNER JOIN professions P ON P.idProfession = OMF.idProfession
                     LEFT JOIN badges B ON B.idBadge = O.badgeId 
-                    LEFT JOIN commentaires_ouvriers CO ON CO.idOuvrier = O.idOuvrier
+                    LEFT JOIN commentaires CO ON CO.idOuvrier = O.idOuvrier
                     WHERE $condtionPart
-                    GROUP BY O.idOuvrier, O.nomOuvrier, O.prenomOuvrier, O.phone, O.imgProfile;
+                    GROUP BY O.idOuvrier, O.nomOuvrier, O.prenomOuvrier, O.phone, O.imgProfile;;
                 " ;
                 $result = $this->dbCon->query($query);
 
@@ -100,13 +99,9 @@ class WorkerModel{
                             O.prenomOuvrier, 
                             O.phone, 
                             O.imgProfile , 
-                            B.* ,
-                            COUNT(CO.idCommentaire) AS nbrCommentair,                              
-                            CAST(AVG(CO.nbrEtoile) AS DECIMAL(10,1)) AS avgEtoile
+                            B.* 
                             FROM ouvriers O 
                             INNER JOIN badges B ON B.idBadge = O.badgeId 
-                            INNER JOIN commentaires_ouvriers CO ON CO.idOuvrier = O.idOuvrier
-                            GROUP BY O.idOuvrier, O.nomOuvrier, O.prenomOuvrier, O.phone, O.imgProfile
                             LIMIT $top;";
             $result = $this->dbCon->query($query);
 

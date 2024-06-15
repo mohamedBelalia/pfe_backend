@@ -35,7 +35,7 @@ class ProjectsModel{
 
             if($result->num_rows > 0){
 
-                return $result->fetch_all(MYSQLI_ASSOC);
+                return $result->fetch_assoc();
             }
 
             return 0 ;
@@ -50,9 +50,14 @@ class ProjectsModel{
                 $query = "SELECT imgPath FROM project_images WHERE idProject = '$idProject';" ;
 
                 $result = $this->dbConnection->query($query);
+                $images = [] ;
+
+                while($img = $result->fetch_assoc()){
+                    array_push($images , $img["imgPath"]);
+                }
 
                 if($result->num_rows > 0){
-                    return $result->fetch_all(MYSQLI_ASSOC);
+                    return $images;
                 }
 
                 return 0 ;
@@ -85,6 +90,42 @@ class ProjectsModel{
     
                 foreach ($images as $img) {
                     $stmtCommandProjetImages->bind_param("is", $idProjet, $img);
+                    if (!$stmtCommandProjetImages->execute()) {
+                        throw new Exception("Error executing query");
+                    }
+                }
+    
+                $this->dbConnection->commit();
+                return true;
+            } catch (Exception $e) {
+                $this->dbConnection->rollback();
+                return false;
+            }
+        }
+    }
+
+    public function updateProject($projectId , $title , $description , $images){
+        if ($this->dbConnection != null) {
+        
+            $this->dbConnection->begin_transaction();
+    
+            try {
+                if(isset($images[0])){
+                    $coverImg = $images[0] ;
+                    $queryUpdate = "UPDATE projects_ouvriers SET titre = '$title', description_projet = '$description', imageProjet = '$coverImg'  WHERE idProjet = '$projectId'";
+                }
+                else{
+                    $queryUpdate = "UPDATE projects_ouvriers SET titre = '$title', description_projet = '$description' WHERE idProjet = '$projectId'";
+                }
+                // updating
+                $this->dbConnection->query($queryUpdate);
+    
+                // Insertion dans la table "project_images"
+                $queryInsertInProjetImages = "INSERT INTO project_images(idProject, imgPath) VALUES (?,?)";
+                $stmtCommandProjetImages = $this->dbConnection->prepare($queryInsertInProjetImages);
+    
+                foreach ($images as $img) {
+                    $stmtCommandProjetImages->bind_param("is", $projectId, $img);
                     if (!$stmtCommandProjetImages->execute()) {
                         throw new Exception("Error executing query");
                     }

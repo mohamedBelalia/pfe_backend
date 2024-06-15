@@ -10,7 +10,7 @@ class RatesModel{
 
     public function getByIdWorker($idWorker){
         if($this->dbConnection != null){
-            $query = "SELECT * FROM commentaires_ouvriers WHERE idOuvrier = '$idWorker';";
+            $query = "SELECT * FROM commentaires WHERE idOuvrier = '$idWorker';";
 
             $result = $this->dbConnection->query($query);
 
