@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 require "./Models/WorkerModel.php";
 
@@ -42,7 +42,7 @@ class WorkerController{
                     echo '{"status" : "connection error"}';
                     header("HTTP/1.1 500");
                 }
-            } 
+            }
             else if(isset($paramiterKeyValue["top"])){
 
                 if((int)$paramiterKeyValue["top"]){
@@ -54,15 +54,15 @@ class WorkerController{
                     else if($result == 0){
                         echo '{"status" : "not_found"}';
                         // header("HTTP/1.1 404");
-                    } 
+                    }
                     else{
                         echo json_encode($result);
                     }
                 }
                 else{
                     echo '{"status" : "wrong_URI_format"}';
-                }                
-            }  
+                }
+            }
         }
         else{
             $result = $this->userModel->getAll();
@@ -85,7 +85,7 @@ class WorkerController{
             // we should check if the data is complate
 
             if(is_array($data)){
-                $insertionState = $this->userModel->insertUser($data) ;
+                $insertionState = $this->userModel->insertUser($data);
 
                 if($insertionState){
                     echo '{"status" : "inserted successfully"}';
@@ -98,18 +98,18 @@ class WorkerController{
                 echo '{"status" : "wrong data format"}';
             }
 
-          
+
 
         }
         else{
             echo '{"status" : "wrong uri"}';
         }
-        
+
     }
 
     public function delete($paramiterKeyValue){
         if(isset($paramiterKeyValue["id"])){
-            
+
             $deleteState = $this->userModel->deleteUser($paramiterKeyValue["id"]);
 
             if($deleteState == null){
@@ -148,7 +148,7 @@ class WorkerController{
             else {
                 echo '{"status" : "wrong data format"}';
             }
-        }   
+        }
         else{
             echo '{"status" : "wrong uri"}';
         }

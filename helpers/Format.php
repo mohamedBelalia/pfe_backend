@@ -42,7 +42,7 @@ class Format{
         $passedParamiters = explode("=" , $keyValue);
 
         if($passedParamiters[0] == "id" || $passedParamiters[0] == "top" || $passedParamiters[0] == "workerId" || 
-            $passedParamiters[0] == "images" || $passedParamiters[0] == "rateOf" || $passedParamiters[0] = "idProject"){
+            $passedParamiters[0] == "images" || $passedParamiters[0] == "rateOf" || $passedParamiters[0] == "idProject" || $passedParamiters[0] == "updateProject"){
             $passedParamiterValue = $passedParamiters[1]; 
         }
         else if($passedParamiters[0] == "filter"){

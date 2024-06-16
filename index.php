@@ -13,6 +13,7 @@ require "Controllers/RatesController.php";
 require "Controllers/CommentairesController.php";
 require "Controllers/VillesController.php";
 require "Controllers/ProjectImagesController.php";
+require "Controllers/SignupController.php";
 
 
 $passedParamiterValue = null ;
@@ -69,6 +70,10 @@ switch ($endpoint) {
     case "porject-images" :
         $projectImages = new ProjectImagesController() ;
         $projectImages->request($method , $paramiterKeyValue);
+        break;
+    case "Signup" :
+        $signupWorker = new SignupController();
+        $signupWorker->request($method , $paramiterKeyValue);
         break;
 
     default:
