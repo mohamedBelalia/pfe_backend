@@ -1,11 +1,10 @@
 <?php 
-    require "./Models/AuhtenticationModel.php";
 
     class SignupController{
         private $authenticationModel ;
 
-        function __construct(){
-            $this->authenticationModel = new AuhtenticationModel();
+        function __construct($authKeyPassed){
+            $this->authenticationModel = new AuhtenticationModel($authKeyPassed);
         }
 
         public function request($method , $paramiterKeyValue){

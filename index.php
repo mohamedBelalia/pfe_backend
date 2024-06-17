@@ -3,6 +3,9 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Authorization, Content-Type");
 
+include "./Models/AuhtenticationModel.php";
+
+include "./config/DotEnvEnvironment.php";
 require "./config/DbConnection.php";
 require "helpers/Format.php";
 require "Controllers/WorkerController.php";
@@ -14,6 +17,7 @@ require "Controllers/CommentairesController.php";
 require "Controllers/VillesController.php";
 require "Controllers/ProjectImagesController.php";
 require "Controllers/SignupController.php";
+require "Controllers/LoginController.php";
 
 
 $passedParamiterValue = null ;
@@ -36,6 +40,9 @@ $endpoint = $paramitersArray[0];
 if(isset($paramitersArray[1])){
     $paramiterKeyValue = Format::formatPassedParamiters($paramitersArray[1]);
 }
+
+$dotEnv = new DotEnvEnvironment();
+$dotEnv->load();
 
 
 switch ($endpoint) {
@@ -72,10 +79,13 @@ switch ($endpoint) {
         $projectImages->request($method , $paramiterKeyValue);
         break;
     case "Signup" :
-        $signupWorker = new SignupController();
+        $signupWorker = new SignupController(getenv("AUTH_SECRET_KEY"));
         $signupWorker->request($method , $paramiterKeyValue);
         break;
-
+    case "Login" :
+        $loginorker = new LoginController(getenv("AUTH_SECRET_KEY"));
+        echo $loginorker->request($method , $paramiterKeyValue);
+        break;
     default:
         echo 0;
 }

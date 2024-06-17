@@ -2,9 +2,11 @@
 
 class AuhtenticationModel{
     private $dbConnection ;
+    private $authKey ;
 
-    public function __construct(){
+    public function __construct($authKeyPassed){
         $this->dbConnection = DbConnection::dbCon() ;
+        $this->authKey = $authKeyPassed ;
     }
 
     // signup
@@ -21,6 +23,8 @@ class AuhtenticationModel{
                 $professions = $userData["profession"] ;
 
                 if($this->isUserNotExist($phoneNumber)){
+
+                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
                     
                     $this->dbConnection->begin_transaction();
     
@@ -28,7 +32,7 @@ class AuhtenticationModel{
                         $queryIsertingWorker = "INSERT INTO ouvriers(nomOuvrier ,prenomOuvrier , phone , motDePasse , ville) VALUES (?,?,?,?,?)";
             
                         $stmtInsertingWorker = $this->dbConnection->prepare($queryIsertingWorker);
-                        $stmtInsertingWorker->bind_param("sssss", $lastName, $firstName, $phoneNumber , $password , $ville);
+                        $stmtInsertingWorker->bind_param("sssss", $lastName, $firstName, $phoneNumber , $hashedPassword , $ville);
                         $stmtInsertingWorker->execute();
             
                         $idWorker = $stmtInsertingWorker->insert_id;
@@ -48,11 +52,10 @@ class AuhtenticationModel{
                         $payloadData = [
                             "id" => $idWorker,
                             "phoneNumber" => $phoneNumber,
-                            "firstName" => $firstName,
-                            "pwd" => $password
+                            "firstName" => $firstName
                         ];
 
-                        $token = AuhtenticationModel::generateJWT($payloadData) ;
+                        $token = AuhtenticationModel::generateJWT($payloadData , $this->authKey) ;
 
                         $queryToken = "UPDATE ouvriers SET token = '$token' WHERE idOuvrier = $idWorker;" ;
                         $this->dbConnection->query($queryToken);
@@ -77,6 +80,43 @@ class AuhtenticationModel{
         }
     }
 
+    // login
+    public function login($userData){
+        if($this->dbConnection != null){
+            if(strlen($userData["phone"]) > 8 && strlen($userData["pwd"]) > 1 ){
+                $phone = $userData["phone"] ;
+                $password = $userData["pwd"] ;
+
+                $query = "SELECT token , motDePasse FROM ouvriers WHERE phone = ?;";
+                $stmtLogin = $this->dbConnection->prepare($query);
+                $stmtLogin->bind_param("s" , $phone);
+                $stmtLogin->execute();
+
+                $result = $stmtLogin->get_result();
+                if ($result->num_rows == 1){
+                    $row = $result->fetch_assoc();
+                    $token = $row['token'];
+                    $storedPwd = $row['motDePasse'];
+
+                    if(password_verify($password , $storedPwd)){
+                        return $token ;
+                    }
+                    else{
+                        return "not_found";
+                    }
+                }
+                else{
+                    return "not_found";
+                }
+            }
+            else{
+                return "uncomplate_data";
+            }
+        }
+        else{
+            return "connection_error";
+        }
+    }
 
     // to check if the unique phone number already exist in the database
     private function isUserNotExist($phoneNumber){
@@ -123,17 +163,14 @@ class AuhtenticationModel{
         return $jwt;
     }
 
-    public static function generateJWT($payload){
+    public static function generateJWT($payload , $authKey){
         // header
         $header = [
             'alg' => 'HS256',
             'typ' => 'JWT'
         ];
-        
-        // Secret Key
-        $secretKey = 'work_hard_not_smart';
 
-        return AuhtenticationModel::createJWT($header , $payload , $secretKey);
+        return AuhtenticationModel::createJWT($header , $payload , $authKey);
     }
 
 
