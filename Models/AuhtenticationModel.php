@@ -29,10 +29,12 @@ class AuhtenticationModel{
                     $this->dbConnection->begin_transaction();
     
                     try {
-                        $queryIsertingWorker = "INSERT INTO ouvriers(nomOuvrier ,prenomOuvrier , phone , motDePasse , ville) VALUES (?,?,?,?,?)";
-            
+                        $queryIsertingWorker = "INSERT INTO ouvriers(nomOuvrier ,prenomOuvrier , phone , motDePasse , ville, imgProfile) VALUES (?,?,?,?,?,?)";
+
+                        $imgPath = "defaultUserImage.png" ;
+                        
                         $stmtInsertingWorker = $this->dbConnection->prepare($queryIsertingWorker);
-                        $stmtInsertingWorker->bind_param("sssss", $lastName, $firstName, $phoneNumber , $hashedPassword , $ville);
+                        $stmtInsertingWorker->bind_param("ssssss", $lastName, $firstName, $phoneNumber , $hashedPassword , $ville , $imgPath);
                         $stmtInsertingWorker->execute();
             
                         $idWorker = $stmtInsertingWorker->insert_id;
@@ -52,7 +54,8 @@ class AuhtenticationModel{
                         $payloadData = [
                             "id" => $idWorker,
                             "phoneNumber" => $phoneNumber,
-                            "firstName" => $firstName
+                            "firstName" => $firstName,
+                            "imgPath" => "defaultUserImage.png"
                         ];
 
                         $token = AuhtenticationModel::generateJWT($payloadData , $this->authKey) ;

@@ -74,6 +74,7 @@ class ProjectsController{
 
         $title = isset($_POST['title']) ? $_POST['title'] : '';
         $description = isset($_POST['description']) ? $_POST['description'] : '';
+        $token = isset($_POST['token']) ? $_POST['token'] : '';
         $images = array();
 
         if (isset($_FILES['images'])) {
@@ -105,8 +106,18 @@ class ProjectsController{
         }
         // if the project is adding
         else{
-            if($this->projectModel->addProject("3" , $title , $description , $images)){
+            $insertingResult = $this->projectModel->addProject($token , $title , $description , $images) ;
+            if($insertingResult == "inserted"){
                 echo '{"status" : "done"}';
+            }
+            else if($insertingResult == "inserting_failed"){
+                echo '{"status" : "inserting_failed"}';
+            }
+            else if($insertingResult == "not_valid"){
+                echo '{"status" : "token_not_valid"}';
+            }
+            else if($insertingResult == "exception_error"){
+                echo '{"status" : "exception_error"}';
             }
             else{
                 echo '{"status" : "something_wrong"}';

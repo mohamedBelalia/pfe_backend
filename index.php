@@ -18,6 +18,8 @@ require "Controllers/VillesController.php";
 require "Controllers/ProjectImagesController.php";
 require "Controllers/SignupController.php";
 require "Controllers/LoginController.php";
+require "Controllers/ProtectedController.php";
+require "Controllers/ProfileController.php";
 
 
 $passedParamiterValue = null ;
@@ -85,6 +87,14 @@ switch ($endpoint) {
     case "Login" :
         $loginorker = new LoginController(getenv("AUTH_SECRET_KEY"));
         echo $loginorker->request($method , $paramiterKeyValue);
+        break;
+    case "protected" :
+        $protected = new ProtectedController();
+        $protected->request($method , $paramiterKeyValue);
+        break ;
+    case "profile" :
+        $profile = new ProfileController();
+        $profile->request($method , $paramiterKeyValue);
         break;
     default:
         echo 0;

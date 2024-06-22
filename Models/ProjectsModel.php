@@ -68,7 +68,14 @@ class ProjectsModel{
     }
 
 
-    public function addProject($idWorker, $title, $description, $images) {
+    public function addProject($token, $title, $description, $images) {
+
+        $tokenResult = AuhtenticationModel::verifingJWT($token , $_ENV["AUTH_SECRET_KEY"]);
+
+        if($tokenResult == "not_valid"){
+            return "not_valid";
+        }
+
         if ($this->dbConnection != null) {
         
             $this->dbConnection->begin_transaction();
@@ -79,7 +86,7 @@ class ProjectsModel{
                 VALUES(?,?,?,?)";
     
                 $stmtCommandProjetOuvriers = $this->dbConnection->prepare($queryInsertInProjetOuvriers);
-                $stmtCommandProjetOuvriers->bind_param("sssi", $title, $description, $images[0], $idWorker);
+                $stmtCommandProjetOuvriers->bind_param("sssi", $title, $description, $images[0], $tokenResult["id"]);
                 $stmtCommandProjetOuvriers->execute();
     
                 $idProjet = $stmtCommandProjetOuvriers->insert_id;
@@ -91,15 +98,17 @@ class ProjectsModel{
                 foreach ($images as $img) {
                     $stmtCommandProjetImages->bind_param("is", $idProjet, $img);
                     if (!$stmtCommandProjetImages->execute()) {
-                        throw new Exception("Error executing query");
+                        return "inserting_failed" ;
                     }
                 }
     
                 $this->dbConnection->commit();
-                return true;
+
+                return "inserted";
+
             } catch (Exception $e) {
                 $this->dbConnection->rollback();
-                return false;
+                return "exception_error";
             }
         }
     }

@@ -115,6 +115,20 @@ class WorkerModel{
         return null ;
     }
 
+    public function getUserInfoByToken($token){
+        $tokenValidation = AuhtenticationModel::verifingJWT($token , $_ENV["AUTH_SECRET_KEY"]) ;
+        if($tokenValidation == "not_valid"){
+            return "not_valid";
+        }
+
+        $userId = $tokenValidation["id"];
+        $query = "SELECT nomOuvrier , prenomOuvrier , phone , imgProfile , ville , description_ouvrier , badgeId FROM ouvriers WHERE idOuvrier = '$userId';";
+
+        $result = $this->dbCon->query($query);
+
+        return $result->fetch_assoc() ;
+    }
+
     public function getAll(){
         if($this->dbCon != null){
 
@@ -135,15 +149,14 @@ class WorkerModel{
         if($this->dbCon != null){
             $nomOuvrier = $userInfo["nomOuvrier"] ;
             $prenomOuvrier = $userInfo["prenomOuvrier"] ;
-            $dateNaissance = $userInfo["dateNaissance"] ;
             $phone = $userInfo["phone"] ;
             $imgProfile = $userInfo["imgProfile"] ;
             $motDePasse = $userInfo["motDePasse"] ;
             $ville = $userInfo["ville"] ;
             $description_ouvrier = $userInfo["description_ouvrier"] ;
 
-            $query = "INSERT INTO ouvriers(nomOuvrier , prenomOuvrier , dateNaissance ,phone ,imgProfile ,  motDePasse,ville ,description_ouvrier ) 
-                    VALUES('$nomOuvrier' , '$prenomOuvrier' , '$dateNaissance' , '$phone' , '$imgProfile' , '$motDePasse' , '$ville' , '$description_ouvrier');";
+            $query = "INSERT INTO ouvriers(nomOuvrier , prenomOuvrier ,phone ,imgProfile ,  motDePasse,ville ,description_ouvrier ) 
+                    VALUES('$nomOuvrier' , '$prenomOuvrier' , '$phone' , '$imgProfile' , '$motDePasse' , '$ville' , '$description_ouvrier');";
 
             if($this->dbCon->query($query)){
                 return true ;
@@ -174,7 +187,6 @@ class WorkerModel{
         if($this->dbCon != null){
             $nomOuvrier = $newUserInfo["nomOuvrier"] ;
             $prenomOuvrier = $newUserInfo["prenomOuvrier"] ;
-            $dateNaissance = $newUserInfo["dateNaissance"] ;
             $phone = $newUserInfo["phone"] ;
             $imgProfile = $newUserInfo["imgProfile"] ;
             $motDePasse = $newUserInfo["motDePasse"] ;
@@ -183,7 +195,7 @@ class WorkerModel{
 
             $query = "UPDATE ouvriers
                       SET nomOuvrier = '$nomOuvrier', prenomOuvrier = '$prenomOuvrier',
-                      dateNaissance = '$dateNaissance' , phone = '$phone' , imgProfile = '$imgProfile',
+                         phone = '$phone' , imgProfile = '$imgProfile',
                       motDePasse = '$motDePasse' , ville = '$ville' , description_ouvrier = '$description_ouvrier'
                       WHERE idOuvrier = '$id';";
             

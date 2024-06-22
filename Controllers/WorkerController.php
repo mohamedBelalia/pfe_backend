@@ -63,6 +63,15 @@ class WorkerController{
                     echo '{"status" : "wrong_URI_format"}';
                 }
             }
+            else if(isset($paramiterKeyValue["token"])){
+                $result = $this->userModel->getUserInfoByToken($paramiterKeyValue["token"]);
+                if($result == "not_valid"){
+                    echo '{"status" : "token_not_valid"}';
+                }
+                else {
+                    echo json_encode($result);
+                }
+            }
         }
         else{
             $result = $this->userModel->getAll();
