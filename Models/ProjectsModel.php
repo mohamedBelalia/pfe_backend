@@ -150,6 +150,55 @@ class ProjectsModel{
     }
     
 
+    public function deleteProject($idProject) {
+        // Start the transaction
+        // $this->dbConnection->begin_transaction();
+    
+        try {
+            $querySelect = "SELECT idImg, imgPath FROM project_images WHERE idProject = '$idProject';";
+            $result = $this->dbConnection->query($querySelect);
+    
+
+            $imagePaths = [];
+            while ($image = $result->fetch_assoc()) {
+                $imagePaths[] = $image["imgPath"];
+                $idImg = $image["idImg"];
+                $queryDeleteImg = "DELETE FROM `project_images` WHERE idImg = '$idImg'";
+                $this->dbConnection->query($queryDeleteImg);
+            }
+    
+
+            $queryDeletePost = "DELETE FROM `projects_ouvriers` WHERE idProjet = '$idProject'";
+            $this->dbConnection->query($queryDeletePost);
+    
+
+            // $this->dbConnection->commit();
+    
+
+            foreach ($imagePaths as $imagePath) {
+                $this->deleteImage($imagePath);
+            }
+    
+            return "successful";
+    
+        } catch (Exception $e) {
+
+            // $this->dbConnection->rollback();
+            return "failed";
+        }
+    }
+    
+    // delete file
+    public function deleteImage($imagePath) {
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        } else {
+            return "no";
+        }
+    }
+    
+
+
 }
 
 ?>

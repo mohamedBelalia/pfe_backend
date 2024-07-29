@@ -10,10 +10,8 @@ class WorkerModel{
     public function getById($id) : array | null | int {
         if($this->dbCon != null){
 
-            $query = "SELECT O.idOuvrier , O.nomOuvrier , O.prenomOuvrier , O.phone , O.imgProfile , O.description_ouvrier , V.ville_AR , V.ville_FR ,
-                        B.*
+            $query = "SELECT O.idOuvrier , O.nomOuvrier , O.prenomOuvrier , O.phone , O.imgProfile , O.experience , O.description_ouvrier , V.ville_AR , V.ville_FR
                         FROM ouvriers O
-                        LEFT JOIN badges B ON B.idBadge = O.badgeId
                         LEFT JOIN villes V ON V.idVille = O.ville
                         WHERE O.idOuvrier = '$id';";
             $result = $this->dbCon->query($query);
@@ -94,14 +92,8 @@ class WorkerModel{
     public function getTop($top){
         if($this->dbCon != null){
 
-            $query = "SELECT O.idOuvrier, 
-                            O.nomOuvrier, 
-                            O.prenomOuvrier, 
-                            O.phone, 
-                            O.imgProfile , 
-                            B.* 
+            $query = "SELECT O.*
                             FROM ouvriers O 
-                            INNER JOIN badges B ON B.idBadge = O.badgeId 
                             LIMIT $top;";
             $result = $this->dbCon->query($query);
 
@@ -122,7 +114,10 @@ class WorkerModel{
         }
 
         $userId = $tokenValidation["id"];
-        $query = "SELECT nomOuvrier , prenomOuvrier , phone , imgProfile , ville , description_ouvrier , badgeId FROM ouvriers WHERE idOuvrier = '$userId';";
+        $query = "SELECT O.idOuvrier , O.nomOuvrier, O.prenomOuvrier, O.phone, O.imgProfile, O.description_ouvrier, O.experience , V.ville_AR , V.ville_FR
+                    FROM ouvriers O
+                    INNER JOIN villes V ON V.idVille = O.ville
+                    WHERE idOuvrier = '$userId';";
 
         $result = $this->dbCon->query($query);
 

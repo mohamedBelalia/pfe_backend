@@ -20,6 +20,8 @@ require "Controllers/SignupController.php";
 require "Controllers/LoginController.php";
 require "Controllers/ProtectedController.php";
 require "Controllers/ProfileController.php";
+require "Controllers/VerificationController.php";
+
 
 
 $passedParamiterValue = null ;
@@ -96,6 +98,10 @@ switch ($endpoint) {
         $profile = new ProfileController();
         $profile->request($method , $paramiterKeyValue);
         break;
+    case "verification" :
+        $verification = new VerificationController();
+        $verification->request($method , $paramiterKeyValue);
+        break ;
     default:
         echo 0;
 }

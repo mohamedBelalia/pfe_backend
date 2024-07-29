@@ -24,7 +24,7 @@ class ProjectsController{
                 echo json_encode($result);
             }
             else if($result == 0){
-                echo '{"status" : "not found"}';
+                echo '{"status" : "not_found"}';
                 // header("HTTP/1.1 404");
             }
             else{
@@ -163,7 +163,13 @@ class ProjectsController{
     // }
 
     public function delete($paramiterKeyValue){
-
+        $result = $this->projectModel->deleteProject($paramiterKeyValue["idProject"]);
+        if($result == "successful"){
+            echo '{"status" : "done"}';
+        }
+        else{
+            echo '{"status" : "failed"}';
+        }
     }
 
 }
