@@ -14,7 +14,7 @@ class CommentairesController {
     }
 
     public function get($passedParamiter){
-        if(isset($passedParamiter["rateOf"]) && isset($passedParamiter["workerId"]) ){
+        if(isset($passedParamiter["rateOf"]) && isset($passedParamiter["workerId"])){
             $result = $this->commentaireModel->getCommentRating($passedParamiter["workerId"] , $passedParamiter["rateOf"]);
 
             echo json_encode($result);

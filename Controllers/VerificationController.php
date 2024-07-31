@@ -16,21 +16,36 @@ class VerificationController {
     public function get($paramiterKeyValue){
         if($paramiterKeyValue != null){
             if(isset($paramiterKeyValue["workerId"])){
-
-                $verfiedInfo = '{' ;
+                $isOneEmpty = false ;
+                $addedTheLastOne = false ;
+                $verfiedInfo = '[' ;
 
                 $returnedResult = $this->verificationModel->complatedFields($paramiterKeyValue["workerId"]);
                 while($info = $returnedResult->fetch_assoc()){
                     if($info["imgProfile"] == "defaultUserImage.png"){
-                        $verfiedInfo .= '"imgProfile" : "default",';
+                        $verfiedInfo .= '"imgProfile",';
+                        $isOneEmpty = true ;
                     }
                     if($info["description_ouvrier"] == null){
-                        $verfiedInfo .= '"description_ouvrier" : "null",';
+                        $verfiedInfo .= '"description_ouvrier",';
+                        $isOneEmpty = true ;
                     }
                     if($info["experience"] == null){
-                        $verfiedInfo .= '"experience" : "null"}';
+                        $verfiedInfo .= '"experience"]';
+                        $isOneEmpty = true ;
+                        $addedTheLastOne = true ;
                     }
-                    echo $verfiedInfo;
+
+                    if(!$addedTheLastOne){
+                        $verfiedInfo .= "]";
+                    }
+
+                    if($isOneEmpty){
+                        echo $verfiedInfo;
+                    }
+                    else{
+                        echo "[]";
+                    }
                 }
             }
         }
