@@ -10,7 +10,7 @@ class WorkerModel{
     public function getById($id) : array | null | int {
         if($this->dbCon != null){
 
-            $query = "SELECT O.idOuvrier , O.nomOuvrier , O.prenomOuvrier , O.phone , O.imgProfile , O.experience , O.description_ouvrier , V.ville_AR , V.ville_FR
+            $query = "SELECT O.idOuvrier , O.nomOuvrier , O.prenomOuvrier , O.phone , O.imgProfile , O.experience , O.description_ouvrier , O.ville , V.ville_AR , V.ville_FR
                         FROM ouvriers O
                         LEFT JOIN villes V ON V.idVille = O.ville
                         WHERE O.idOuvrier = '$id';";
@@ -183,16 +183,24 @@ class WorkerModel{
             $nomOuvrier = $newUserInfo["nomOuvrier"] ;
             $prenomOuvrier = $newUserInfo["prenomOuvrier"] ;
             $phone = $newUserInfo["phone"] ;
-            $imgProfile = $newUserInfo["imgProfile"] ;
-            $motDePasse = $newUserInfo["motDePasse"] ;
-            $ville = $newUserInfo["ville"] ;
-            $description_ouvrier = $newUserInfo["description_ouvrier"] ;
+            $imgProfile = $newUserInfo["imgProfile"] ?? "defaultUserImage.png" ;
+            $villeId = $newUserInfo["villeId"] ;
+            $description_ouvrier = $newUserInfo["description"] ;
+            $experience = $newUserInfo["experience"] ;
 
-            $query = "UPDATE ouvriers
-                      SET nomOuvrier = '$nomOuvrier', prenomOuvrier = '$prenomOuvrier',
-                         phone = '$phone' , imgProfile = '$imgProfile',
-                      motDePasse = '$motDePasse' , ville = '$ville' , description_ouvrier = '$description_ouvrier'
+            $query = "" ;
+            if(strlen($villeId) > 0){
+                $query = "UPDATE ouvriers
+                      SET nomOuvrier = '$nomOuvrier', prenomOuvrier = '$prenomOuvrier', experience = '$experience' ,
+                         phone = '$phone' , imgProfile = '$imgProfile' , ville = '$villeId' , description_ouvrier = '$description_ouvrier'
                       WHERE idOuvrier = '$id';";
+            }
+            else{
+                $query = "UPDATE ouvriers
+                      SET nomOuvrier = '$nomOuvrier', prenomOuvrier = '$prenomOuvrier', experience = '$experience' ,
+                         phone = '$phone' , imgProfile = '$imgProfile' , description_ouvrier = '$description_ouvrier'
+                      WHERE idOuvrier = '$id';";
+            }
             
             if($this->dbCon->query($query)){
                 return true ;
@@ -207,8 +215,6 @@ class WorkerModel{
 }
 
 /*
-
-    
  SELECT P.* FROM ouvriers_maitrisent_professions OP
  INNER JOIN professions P ON P.idProfession = OP.idProfession
  WHERE OP.idOuvrier = 1
